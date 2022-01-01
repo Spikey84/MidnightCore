@@ -1,0 +1,59 @@
+main: me.spikey.midnightcore.Main
+
+name: MidnightCore
+version: 1.2
+api-version: 1.18
+author: SpikeyNoob
+
+depend: [SpikeyCooldownAPI, Vault, PlaceholderAPI, eGlow, Towny]
+
+commands:
+  bantime:
+  home:
+  homes:
+  sethome:
+  delhome:
+  tpa:
+  tpaccept:
+  tpdeny:
+    aliases:
+      - tpcancel
+  world:
+  tphere:
+    description: teleports a player to you.
+  gmc:
+    description: creative mode.
+    aliases:
+      - creative
+      - gm1
+  gms:
+    description: Survival mode.
+    aliases:
+      - survival
+      - gm2
+  gmsp:
+    description: Spectator mode.
+    aliases:
+      - spectator
+      - spec
+      - gm3
+  sc:
+    aliases:
+      - staffchat
+  rtp:
+    aliases:
+      - wild
+      - random
+  spawn:
+  link:
+  unlink:
+  toggleannouncements:
+    aliases:
+      - toggle
+  cosmetics:
+    aliases:
+      - chatcolor
+      - tags
+      - glow
+      - eglow
+  pvp:
