@@ -1,7 +1,7 @@
 main: me.spikey.midnightcore.Main
 
 name: MidnightCore
-version: 1.2
+version: 1.3
 api-version: 1.18
 author: SpikeyNoob
 
@@ -40,10 +40,6 @@ commands:
   sc:
     aliases:
       - staffchat
-  rtp:
-    aliases:
-      - wild
-      - random
   spawn:
   link:
   unlink:
@@ -57,3 +53,12 @@ commands:
       - glow
       - eglow
   pvp:
+    aliases:
+      - arena
+      - pvpspawn
+  store:
+  test:
+  undeathban:
+    aliases:
+      - udb
+      - bypassdeath

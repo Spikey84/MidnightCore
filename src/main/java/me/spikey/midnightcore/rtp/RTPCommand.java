@@ -29,6 +29,7 @@ public class RTPCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
+
         if (!(sender instanceof Player)) {
             sender.sendMessage("This is a player only command.");
             return true;
@@ -36,13 +37,17 @@ public class RTPCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
+        if (true) {
+            player.sendMessage("This command is disabled, it will be enabled for the next update.");
+            return true;
+        }
         if (!player.hasPermission("spikey.rtp")) {
             sender.sendMessage("You do not have permission to run this command.");
             return true;
         }
 
         if (api.isOnCooldown(player.getUniqueId(), 100)) {
-            sender.sendMessage("You cannot run this command for another %s minutes(s).".formatted(api.getRemainingFormattedLong(player.getUniqueId(), 100)));
+            sender.sendMessage("You cannot run this command for another %s.".formatted(api.getRemainingFormattedLong(player.getUniqueId(), 100)));
             return true;
         }
 

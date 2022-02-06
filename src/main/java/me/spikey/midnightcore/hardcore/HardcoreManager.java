@@ -60,7 +60,8 @@ public class HardcoreManager implements Listener {
 
         if (pvpAreaManager.isInPvpZone(player)) {
             event.setKeepInventory(true);
-            event.setKeepLevel(true);
+            event.getDrops().clear();
+            //event.setKeepLevel(true);
             player.sendMessage("You are inside a pvp zone, therefore you will not be banned. However you have lost $%s.".formatted(Math.round((eco.getBalance(player))*0.1)));
             if (event.getPlayer().getKiller() != null) {
                 Player killer = event.getPlayer().getKiller();

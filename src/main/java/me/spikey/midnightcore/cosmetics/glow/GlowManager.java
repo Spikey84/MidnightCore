@@ -57,6 +57,7 @@ public class GlowManager implements Listener {
         glowTypes.add(new Glow(EGlowColor.DARK_GRAY, Material.GRAY_STAINED_GLASS_PANE, C.gray + "Dark Grey", (byte) 11));
         glowTypes.add(new Glow(EGlowColor.DARK_GREEN, Material.GREEN_STAINED_GLASS_PANE, C.green + "Dark Green", (byte) 12));
         glowTypes.add(new Glow(EGlowColor.DARK_RED, Material.RED_STAINED_GLASS_PANE, C.red + "Dark Red", (byte) 13));
+        glowTypes.add(new Glow((EGlowColor) null, Material.CACTUS, C.red + "Remove Glow", (byte) 14));
         //glowTypes.add(new Glow(EGlowEffect.RAINBOW_FAST, Material.WATER_BUCKET, C.white + "Rainbow Glow", (byte) 14));
     }
 
@@ -92,9 +93,9 @@ public class GlowManager implements Listener {
 
     @EventHandler
     public void join(PlayerJoinEvent event) {
-        if (playerGlow.get(event.getPlayer().getUniqueId()) == null) return;
-
-        eGlowAPI.disableGlow((new IEGlowPlayer(Bukkit.getPlayer(event.getPlayer().getUniqueId()))));
+        if (event.getPlayer() == null) return;
+        eGlowAPI.disableGlow((new IEGlowPlayer(event.getPlayer())));
+        if (playerGlow.get(event.getPlayer().getUniqueId()) == null || playerGlow.get(event.getPlayer().getUniqueId()) < 1) return;
 
         if (glowTypes.get(playerGlow.get(event.getPlayer().getUniqueId())).eGlowEffect() != null) {
             eGlowAPI.enableGlow((new IEGlowPlayer(event.getPlayer())), glowTypes.get(getGlowID(event.getPlayer().getUniqueId())).eGlowEffect());

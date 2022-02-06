@@ -1,5 +1,7 @@
 package me.spikey.midnightcore;
 
+import com.google.common.collect.Maps;
+import it.unimi.dsi.fastutil.Pair;
 import me.spikey.midnightcore.adverts.AdvertManager;
 import me.spikey.midnightcore.adverts.AdvertsToggleCommand;
 import me.spikey.midnightcore.chat.ChatManager;
@@ -12,11 +14,14 @@ import me.spikey.midnightcore.discord.linking.UnlinkMinecraftCommand;
 import me.spikey.midnightcore.end.EndManager;
 import me.spikey.midnightcore.hardcore.BanTimeCommand;
 import me.spikey.midnightcore.hardcore.HardcoreManager;
+import me.spikey.midnightcore.hardcore.UnBanCommand;
 import me.spikey.midnightcore.homes.*;
+import me.spikey.midnightcore.logging.LoggingManager;
 import me.spikey.midnightcore.pvparea.PvpAreaManager;
 import me.spikey.midnightcore.rtp.PvpCommand;
 import me.spikey.midnightcore.rtp.RTPCommand;
 import me.spikey.midnightcore.rtp.SpawnCommand;
+import me.spikey.midnightcore.rtp.StoreCommand;
 import me.spikey.midnightcore.staff.CreativeCommand;
 import me.spikey.midnightcore.staff.SpectatorCommand;
 import me.spikey.midnightcore.staff.SurvivalCommand;
@@ -34,9 +39,19 @@ import me.spikey.spikeycooldownapi.API;
 import net.luckperms.api.LuckPerms;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
+
+import org.apache.log4j.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.Statistic;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class Main extends JavaPlugin {
 
@@ -64,6 +79,24 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Metrics metrics = new Metrics(this, 13798);
+        metrics.addCustomChart(new Metrics.SingleLineChart("players", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return Bukkit.getOnlinePlayers().size();
+            }
+        }));
+        metrics.addCustomChart(new Metrics.MultiLineChart("ram and tps", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                HashMap<String, Integer> map = Maps.newHashMap();
+                @NotNull double[] tps = Bukkit.getServer().getTPS();
+                map.put("ram", Math.round(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+                map.put("tps", (int) Math.round(tps[0]));
+                return map;
+            }
+        }
+        ));
         SchedulerUtils.setPlugin(this);
         saveDefaultConfig();
 
@@ -116,8 +149,7 @@ public class Main extends JavaPlugin {
 
         getCommand("staffchat").setExecutor(new StaffChatCommands(staffChatManager));
 
-        getCommand("rtp").setExecutor(new RTPCommand(api));
-        getCommand("spawn").setExecutor(new SpawnCommand(api, teleportManager));
+        //getCommand("spawn").setExecutor(new SpawnCommand(api, teleportManager));
 
         getCommand("link").setExecutor(new LinkMinecraftCommand(discordManager.getLinkingManager()));
         getCommand("unlink").setExecutor(new UnlinkMinecraftCommand(discordManager.getLinkingManager()));
@@ -126,7 +158,12 @@ public class Main extends JavaPlugin {
 
         getCommand("cosmetics").setExecutor(new CosmeticsCommand(this, cosmeticManager));
 
-        getCommand("pvp").setExecutor(new PvpCommand(api, teleportManager, pvpAreaManager));
+        //getCommand("pvp").setExecutor(new PvpCommand(api, teleportManager, pvpAreaManager));
+
+        //getCommand("store").setExecutor(new StoreCommand(api, teleportManager));
+        //getCommand("test").setExecutor(new test());
+
+        getCommand("undeathban").setExecutor(new UnBanCommand(hardcoreManager, api));
     }
 
     @Override
@@ -171,4 +208,6 @@ public class Main extends JavaPlugin {
     public CosmeticManager getCosmeticManager() {
         return cosmeticManager;
     }
+
+
 }

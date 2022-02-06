@@ -3,6 +3,7 @@ package me.spikey.midnightcore.chat;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.spikey.midnightcore.Main;
 import me.spikey.midnightcore.utils.ChatUtils;
+import me.spikey.midnightcore.utils.SchedulerUtils;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,24 +31,26 @@ public class ChatManager implements Listener {
         if (event.isCancelled()) return;
         event.setCancelled(true);
         if (event.getMessage().contains("[event cancelled by LiteBans]")) return;
+        SchedulerUtils.runAsync(() -> {
+            net.md_5.bungee.api.ChatColor chatColor = main.getCosmeticManager().getChatColorManager().getChatColor(event.getPlayer().getUniqueId());
+            if (chatColor == null) chatColor = net.md_5.bungee.api.ChatColor.GRAY;
 
-        net.md_5.bungee.api.ChatColor chatColor = main.getCosmeticManager().getChatColorManager().getChatColor(event.getPlayer().getUniqueId());
+            String name = event.getPlayer().getName();
 
-        String name = event.getPlayer().getName();
+            String prefix = main.getChat().getPlayerPrefix(event.getPlayer());
 
-        String prefix = main.getChat().getPlayerPrefix(event.getPlayer());
+            String placeholder = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%townyadvanced_town%");
+            placeholder = ChatColor.stripColor(placeholder);
+            placeholder = green + placeholder;
 
-        String placeholder = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%townyadvanced_town%");
-        placeholder = ChatColor.stripColor(placeholder);
-        placeholder = green + placeholder;
+            String msg = String.format("%s%s&f%s%s" + ChatColor.WHITE + ": ", placeholder, prefix, name, main.getCosmeticManager().getTagsManager().getTagString(event.getPlayer()));
 
-        String msg = String.format("%s%s&f%s%s" + ChatColor.WHITE + ": ", placeholder, prefix, name, main.getCosmeticManager().getTagsManager().getTagString(event.getPlayer()));
+            msg = ChatUtils.hexTranslation(msg);
+            msg = ChatColor.translateAlternateColorCodes('&', msg);
+            msg = msg + chatColor + event.getMessage();
 
-        msg = ChatUtils.hexTranslation(msg);
-        msg = ChatColor.translateAlternateColorCodes('&', msg);
-        msg = msg + chatColor + event.getMessage();
-
-        Bukkit.getServer().broadcastMessage(msg);
+            Bukkit.getServer().broadcastMessage(msg);
+        });
     }
 
 }

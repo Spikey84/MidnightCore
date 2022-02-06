@@ -1,27 +1,26 @@
 package me.spikey.midnightcore.rtp;
 
-import me.spikey.midnightcore.pvparea.PvpAreaManager;
 import me.spikey.midnightcore.teleportcooldown.TeleportManager;
 import me.spikey.spikeycooldownapi.API;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PvpCommand implements CommandExecutor {
+///
+public class StoreCommand implements CommandExecutor {
     private API api;
     private TeleportManager teleportManager;
-    private PvpAreaManager pvpAreaManager;
 
-    public PvpCommand(API api, TeleportManager teleportManager, PvpAreaManager pvpAreaManager) {
+    public StoreCommand(API api, TeleportManager teleportManager) {
 
         this.api = api;
         this.teleportManager = teleportManager;
-        this.pvpAreaManager = pvpAreaManager;
 
-        //api.registerCooldown(102, "pvp");
+        //api.registerCooldown(103, "store");
     }
 
     @Override
@@ -34,18 +33,20 @@ public class PvpCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (!player.hasPermission("core.pvp")) {
-            sender.sendMessage("You do not have permission to run this command.");
-            return true;
-        }
 
-//        if (api.isOnCooldown(player.getUniqueId(), 102)) {
-//            sender.sendMessage("You cannot run this command for another %s.".formatted(api.getRemainingFormattedLong(player.getUniqueId(), 102)));
+//
+//        if (!player.hasPermission("core.store")) {
+//            sender.sendMessage("You do not have permission to run this command.");
 //            return true;
 //        }
-
-        teleportManager.addTeleport(player, pvpAreaManager.getPvpSpawn());
-        //api.updateCooldown(player.getUniqueId(), 102);
+//
+////        if (api.isOnCooldown(player.getUniqueId(), 103)) {
+////            sender.sendMessage("You cannot run this command for another %s.".formatted(api.getRemainingFormattedLong(player.getUniqueId(), 103)));
+////            return true;
+////        }
+//
+//        teleportManager.addTeleport(player, new Location(Bukkit.getWorld("world"), 118, 47, 160));
+        //api.updateCooldown(player.getUniqueId(), 103);
         return true;
     }
 }

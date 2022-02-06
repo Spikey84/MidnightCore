@@ -1,5 +1,7 @@
 package me.spikey.midnightcore.utils;
 
+import org.bukkit.Bukkit;
+
 import java.util.UUID;
 
 public class UUIDUtils {

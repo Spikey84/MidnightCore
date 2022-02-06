@@ -97,16 +97,20 @@ public class HomeManager implements Listener {
     }
 
     public int getMaxHomeAmount(Player player) {
-        int homeAmount = 0;
+        List<Integer> homeAmount = Lists.newArrayList();
 
         for (PermissionAttachmentInfo attachmentInfo : player.getEffectivePermissions()) {
             if (attachmentInfo.getPermission().startsWith("core.home")) {
                 if (attachmentInfo.getPermission().equals("core.home")) continue;
-                homeAmount = Integer.parseInt(attachmentInfo.getPermission().substring(attachmentInfo.getPermission().lastIndexOf(".") + 1));
+                homeAmount.add(Integer.parseInt(attachmentInfo.getPermission().substring(attachmentInfo.getPermission().lastIndexOf(".") + 1)));
             }
         }
 
-        return homeAmount;
+        int finalHomeAmount = 0;
+        for (int i : homeAmount) {
+            if (i > finalHomeAmount) finalHomeAmount = i;
+        }
+        return finalHomeAmount;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -61,6 +61,7 @@ public class Glow {
     }
 
     public boolean canBeUsed(Player player) {
+        if (color == null) return true;
 
         return (player.hasPermission("cosmetics.glow.%s".formatted(getId())) || player.hasPermission("cosmetics.glow.*"));
     }

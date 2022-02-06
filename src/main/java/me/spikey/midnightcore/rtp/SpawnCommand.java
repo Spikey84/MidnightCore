@@ -18,7 +18,7 @@ public class SpawnCommand implements CommandExecutor {
         this.api = api;
         this.teleportManager = teleportManager;
 
-        api.registerCooldown(101, "spawn");
+        //api.registerCooldown(101, "spawn");
     }
 
     @Override
@@ -36,13 +36,13 @@ public class SpawnCommand implements CommandExecutor {
             return true;
         }
 
-        if (api.isOnCooldown(player.getUniqueId(), 101)) {
-            sender.sendMessage("You cannot run this command for another %s minutes(s).".formatted(api.getRemainingFormattedLong(player.getUniqueId(), 101)));
-            return true;
-        }
+//        if (api.isOnCooldown(player.getUniqueId(), 101)) {
+//            sender.sendMessage("You cannot run this command for another %s.".formatted(api.getRemainingFormattedLong(player.getUniqueId(), 101)));
+//            return true;
+//        }
 
         teleportManager.addTeleport(player, Bukkit.getWorld("world").getSpawnLocation());
-        api.updateCooldown(player.getUniqueId(), 101);
+        //api.updateCooldown(player.getUniqueId(), 101);
         return true;
     }
 }

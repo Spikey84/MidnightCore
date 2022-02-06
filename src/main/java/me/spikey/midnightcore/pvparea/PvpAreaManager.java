@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import it.unimi.dsi.fastutil.Pair;
 import me.spikey.midnightcore.utils.C;
@@ -41,9 +42,9 @@ public class PvpAreaManager implements Listener {
 
     public PvpAreaManager(Plugin plugin) {
         this.plugin = plugin;
-        pvpBounds = Pair.of(new Location(Bukkit.getWorld("world"), 138, 79, 270), new Location(Bukkit.getWorld("world"), 123, 70, 254));
-        hillBounds = Pair.of(new Location(Bukkit.getWorld("world"), 133, 72, 264), new Location(Bukkit.getWorld("world"), 129, 70, 260));
-        pvpSpawn = new Location(Bukkit.getWorld("world"), 138, 79, 270);
+        pvpBounds = Pair.of(new Location(Bukkit.getWorld("world"), 236, 36, 56), new Location(Bukkit.getWorld("world"), 165, -3, -33));
+        hillBounds = Pair.of(new Location(Bukkit.getWorld("world"), 189, 28, 23), new Location(Bukkit.getWorld("world"), 178, 6, -4));
+        pvpSpawn = new Location(Bukkit.getWorld("world"), 238, 6, 9);
 
         pvpParticles = generateParticles();
 
@@ -57,8 +58,14 @@ public class PvpAreaManager implements Listener {
         SchedulerUtils.runRepeating(() -> {
 
             if (getTimeRemainingTimeHillMillis() > 0) return;
+            lastHillCheck = Timestamp.from(Instant.now());
             List<Player> onHill = Lists.newArrayList();
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            Collection<Player> players = hillBounds.right().getNearbyPlayers(300);
+            if (players.size() < 3) {
+                broadcastMessage(C.red + "" + "PVP: " + ChatColor.RESET + "" + C.gray + "At least 3 players must be present near the pvp area to control the hill!");
+                return;
+            }
+            for (Player player : players) {
                 if (!isOnHill(player)) continue;
                 onHill.add(player);
             }
@@ -78,7 +85,7 @@ public class PvpAreaManager implements Listener {
 
 
             if (towns.size() == 0) {
-                Bukkit.broadcastMessage(C.red + "" + "PVP: " + ChatColor.RESET + "" + C.gray + "The hill is not currently controlled!");
+                broadcastMessage(C.red + "" + "PVP: " + ChatColor.RESET + "" + C.gray + "The hill is not currently controlled!");
                 return;
             }
 
@@ -91,13 +98,24 @@ public class PvpAreaManager implements Listener {
             }
 
             try {
-                max.getKey().depositToBank(max.getKey().getMayor(), 100);
+                Resident resident = max.getKey().getMayor();
+                for (Resident r : max.getKey().getResidents()) {
+                    if (!r.isOnline()) continue;
+                    resident = r;
+                }
+                max.getKey().depositToBank(resident, 50);
             } catch (TownyException e) {
                 e.printStackTrace();
             }
-            Bukkit.broadcastMessage(C.red + "" + "PVP: " + ChatColor.RESET + "" + C.gray + "The hill is currently controlled by %s. They have gained $100.".formatted(max.getKey().getName()));
-            lastHillCheck = Timestamp.from(Instant.now());
+            broadcastMessage(C.red + "" + "PVP: " + ChatColor.RESET + "" + C.gray + "The hill is currently controlled by %s. They have gained 50.".formatted(max.getKey().getName()));
+
         }, 100);
+    }
+
+    public void broadcastMessage(String message) {
+        for (Player player : pvpBounds.right().getWorld().getNearbyPlayers(pvpBounds.right(), 200)) {
+            player.sendMessage(message);
+        }
     }
 
     public boolean isInPvpZone(Player player) {
@@ -137,7 +155,7 @@ public class PvpAreaManager implements Listener {
 
                 if (particle.getKey().getY() > hillBounds.left().getY() && particle.getValue().equals(Color.green)) particle.getKey().setY(hillBounds.left().getY());
                 if (particle.getKey().getY() < hillBounds.right().getY() && particle.getValue().equals(Color.green)) particle.getKey().setY(hillBounds.right().getY());
-                if (player.getWorld() == particle.getKey().getWorld() && player.getLocation().distance(particle.getKey()) < 10) pR(particle.getKey(), player, particle.getValue());
+                if (player.getWorld() == particle.getKey().getWorld() && player.getLocation().distance(particle.getKey()) < 30) pR(particle.getKey(), player, particle.getValue());
             }
         }
 
