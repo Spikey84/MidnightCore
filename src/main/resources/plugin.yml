@@ -1,7 +1,7 @@
 main: me.spikey.midnightcore.Main
 
 name: MidnightCore
-version: 1.3
+version: 1.4
 api-version: 1.18
 author: SpikeyNoob
 
@@ -42,7 +42,14 @@ commands:
       - staffchat
   spawn:
   link:
+    aliases:
+      - mclink
+      - sublink
   unlink:
+    aliases:
+      - unsublink
+      - unmclink
+      - mcunlink
   toggleannouncements:
     aliases:
       - toggle
@@ -62,3 +69,14 @@ commands:
     aliases:
       - udb
       - bypassdeath
+  discord:
+    aliases:
+      - dc
+      - dis
+  rules:
+    aliases:
+      - rule
+      - ruleslist
+  spikeydebugcommand:
+    aliases:
+      - spikey

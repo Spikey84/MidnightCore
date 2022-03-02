@@ -8,6 +8,9 @@ import me.spikey.midnightcore.chat.ChatManager;
 import me.spikey.midnightcore.cosmetics.CosmeticManager;
 import me.spikey.midnightcore.cosmetics.CosmeticsCommand;
 import me.spikey.midnightcore.crafting.CraftingManager;
+import me.spikey.midnightcore.customend.CustomEndManager;
+import me.spikey.midnightcore.customend.DebugCommand;
+import me.spikey.midnightcore.discord.DiscordCommand;
 import me.spikey.midnightcore.discord.DiscordManager;
 import me.spikey.midnightcore.discord.linking.LinkMinecraftCommand;
 import me.spikey.midnightcore.discord.linking.UnlinkMinecraftCommand;
@@ -64,7 +67,7 @@ public class Main extends JavaPlugin {
     private ChatManager chatManager;
     private HardcoreManager hardcoreManager;
     private AdvertManager advertManager;
-    private DiscordManager discordManager;
+    //private DiscordManager discordManager;
 
     private HomeManager homeManager;
     private TPAManager tpaManager;
@@ -76,6 +79,8 @@ public class Main extends JavaPlugin {
 
     private CosmeticManager cosmeticManager;
     private PvpAreaManager pvpAreaManager;
+
+    private CustomEndManager customEndManager;
 
     @Override
     public void onEnable() {
@@ -117,18 +122,20 @@ public class Main extends JavaPlugin {
         pvpAreaManager = new PvpAreaManager(this);
         hardcoreManager = new HardcoreManager(api, this, pvpAreaManager, eco);
         advertManager = new AdvertManager(this);
-        discordManager = new DiscordManager(this);
+        //discordManager = new DiscordManager(this);
 
         teleportManager = new TeleportManager(this);
         homeManager = new HomeManager(this);
         tpaManager = new TPAManager(teleportManager);
-        staffChatManager = new StaffChatManager(discordManager.getJda(), discordManager, this);
+        //staffChatManager = new StaffChatManager(discordManager.getJda(), discordManager, this);
 
         endManager = new EndManager(this);
 
         craftingManager = new CraftingManager(this);
 
         cosmeticManager = new CosmeticManager(this);
+
+        customEndManager = new CustomEndManager(this);
 
 
         getCommand("bantime").setExecutor(new BanTimeCommand(api));
@@ -148,11 +155,14 @@ public class Main extends JavaPlugin {
         getCommand("gmsp").setExecutor(new SpectatorCommand());
 
         getCommand("staffchat").setExecutor(new StaffChatCommands(staffChatManager));
+        getCommand("discord").setExecutor(new DiscordCommand());
+        getCommand("rules").setExecutor(new RulesCommand());
+        getCommand("spikeydebugcommand").setExecutor(new DebugCommand());
 
         //getCommand("spawn").setExecutor(new SpawnCommand(api, teleportManager));
 
-        getCommand("link").setExecutor(new LinkMinecraftCommand(discordManager.getLinkingManager()));
-        getCommand("unlink").setExecutor(new UnlinkMinecraftCommand(discordManager.getLinkingManager()));
+        //getCommand("link").setExecutor(new LinkMinecraftCommand(discordManager.getLinkingManager()));
+        //getCommand("unlink").setExecutor(new UnlinkMinecraftCommand(discordManager.getLinkingManager()));
 
         getCommand("toggleannouncements").setExecutor(new AdvertsToggleCommand(advertManager.getToggleManager()));
 

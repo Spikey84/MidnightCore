@@ -42,6 +42,11 @@ public class EndManager implements Listener {
 
         EnderDragon enderDragon = (EnderDragon) event.getEntity();
 
+        if (enderDragon.getWorld().getName().equals("Custom_end")) {
+            event.setCancelled(true);
+            return;
+        }
+
         enderDragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1000);
         enderDragon.setHealth(1000);
 
@@ -61,9 +66,15 @@ public class EndManager implements Listener {
 
         EnderDragon enderDragon = (EnderDragon) event.getEntity();
 
+        if (enderDragon.getHealth() <= 10) {
+            Bukkit.getScheduler().cancelTask(taskId);
+
+            return;
+        }
+
         if (enderDragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() == 500) {
 
-            if (event.getEntity() instanceof Player) {
+            if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
                 Bukkit.broadcastMessage(ChatColor.RED + "The dragon can only be killed with projectiles in this stage!");
                 event.setCancelled(true);
             }
@@ -96,6 +107,10 @@ public class EndManager implements Listener {
 
             taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
                 if (enderDragon == null) Bukkit.getScheduler().cancelTask(taskId);
+                if (enderDragon.getHealth() <= 1) {
+                    cancelTask();
+                    return;
+                }
 
                 Player[] players = world.getNearbyPlayers(new Location(world, 0, 100, 0), 100).toArray(Player[]::new);
 
@@ -156,5 +171,9 @@ public class EndManager implements Listener {
         enderDragon.getDragonBattle().getBossBar().setTitle(ChatColor.DARK_PURPLE + "Ender Dragon");
 
 
+    }
+
+    public void cancelTask() {
+        Bukkit.getScheduler().cancelTask(taskId);
     }
 }
