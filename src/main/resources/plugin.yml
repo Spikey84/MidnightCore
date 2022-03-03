@@ -77,6 +77,3 @@ commands:
     aliases:
       - rule
       - ruleslist
-  spikeydebugcommand:
-    aliases:
-      - spikey

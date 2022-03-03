@@ -67,7 +67,7 @@ public class Main extends JavaPlugin {
     private ChatManager chatManager;
     private HardcoreManager hardcoreManager;
     private AdvertManager advertManager;
-    //private DiscordManager discordManager;
+    private DiscordManager discordManager;
 
     private HomeManager homeManager;
     private TPAManager tpaManager;
@@ -122,12 +122,12 @@ public class Main extends JavaPlugin {
         pvpAreaManager = new PvpAreaManager(this);
         hardcoreManager = new HardcoreManager(api, this, pvpAreaManager, eco);
         advertManager = new AdvertManager(this);
-        //discordManager = new DiscordManager(this);
+        discordManager = new DiscordManager(this);
 
         teleportManager = new TeleportManager(this);
         homeManager = new HomeManager(this);
         tpaManager = new TPAManager(teleportManager);
-        //staffChatManager = new StaffChatManager(discordManager.getJda(), discordManager, this);
+        staffChatManager = new StaffChatManager(discordManager.getJda(), discordManager, this);
 
         endManager = new EndManager(this);
 
@@ -157,12 +157,12 @@ public class Main extends JavaPlugin {
         getCommand("staffchat").setExecutor(new StaffChatCommands(staffChatManager));
         getCommand("discord").setExecutor(new DiscordCommand());
         getCommand("rules").setExecutor(new RulesCommand());
-        getCommand("spikeydebugcommand").setExecutor(new DebugCommand());
+        //getCommand("spikeydebugcommand").setExecutor(new DebugCommand());
 
         //getCommand("spawn").setExecutor(new SpawnCommand(api, teleportManager));
 
-        //getCommand("link").setExecutor(new LinkMinecraftCommand(discordManager.getLinkingManager()));
-        //getCommand("unlink").setExecutor(new UnlinkMinecraftCommand(discordManager.getLinkingManager()));
+        getCommand("link").setExecutor(new LinkMinecraftCommand(discordManager.getLinkingManager()));
+        getCommand("unlink").setExecutor(new UnlinkMinecraftCommand(discordManager.getLinkingManager()));
 
         getCommand("toggleannouncements").setExecutor(new AdvertsToggleCommand(advertManager.getToggleManager()));
 
